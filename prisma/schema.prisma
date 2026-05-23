@@ -1,30 +1,42 @@
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
 model Product {
-  id          String @id @default(uuid())
+  id          String  @id @default(uuid())
   name        String
   description String?
 
-  stocks Stock[]
+  stocks       Stock[]
+  reservations Reservation[] // add this
 }
 
 model Warehouse {
-  id      String @id @default(uuid())
-  name    String
-  city    String
+  id   String @id @default(uuid())
+  name String
+  city String
 
-  stocks Stock[]
+  stocks       Stock[]
+  reservations Reservation[] // add this
 }
 
 model Stock {
-  id            String @id @default(uuid())
+  id String @id @default(uuid())
 
-  productId     String
-  warehouseId   String
+  productId   String
+  warehouseId String
 
   totalUnits    Int
   reservedUnits Int @default(0)
 
-  product Product @relation(fields:[productId], references:[id])
-  warehouse Warehouse @relation(fields:[warehouseId], references:[id])
+  product   Product   @relation(fields: [productId], references: [id])
+  warehouse Warehouse @relation(fields: [warehouseId], references: [id])
 
   @@unique([productId, warehouseId])
 }
@@ -36,10 +48,9 @@ enum ReservationStatus {
 }
 
 model Reservation {
-
   id String @id @default(uuid())
 
-  productId String
+  productId   String
   warehouseId String
 
   quantity Int
@@ -50,11 +61,10 @@ model Reservation {
 
   createdAt DateTime @default(now())
 
-  product Product @relation(fields:[productId], references:[id])
+  product Product @relation(fields: [productId], references: [id])
 
-  warehouse Warehouse @relation(fields:[warehouseId], references:[id])
+  warehouse Warehouse @relation(fields: [warehouseId], references: [id])
 
   @@index([status])
   @@index([expiresAt])
-
 }
