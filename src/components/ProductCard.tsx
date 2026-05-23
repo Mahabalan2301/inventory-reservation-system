@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Loader2, Minus, Plus, ShoppingCart } from "lucide-react";
 import { toast } from "sonner";
+import { productImages } from "@/lib/productImages";
 import { WarehouseStock } from "@/components/WarehouseStock";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -76,7 +77,11 @@ export function ProductCard({ product, index, onReserved }: ProductCardProps) {
       <Card className="overflow-hidden transition-all duration-300 hover:shadow-xl hover:scale-[1.02]">
         <div className="relative h-44 w-full overflow-hidden bg-muted">
           <Image
-            src={product.image}
+            src={
+              productImages[product.name]
+              ??
+              "/placeholder.jpg"
+            }
             alt={product.name}
             fill
             className="object-cover transition-transform duration-300 hover:scale-105"
