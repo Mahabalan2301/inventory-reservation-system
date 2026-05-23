@@ -41,11 +41,16 @@ export const api = {
   getReservation: (id: string) =>
     request<ReservationResponse>(`/api/reservations/${id}`),
 
-  createReservation: (payload: CreateReservationPayload) =>
-    request<ReservationResponse>("/api/reservations", {
+  createReservation: (payload: CreateReservationPayload) => {
+    const idempotencyKey = crypto.randomUUID();
+    return request<ReservationResponse>("/api/reservations", {
       method: "POST",
       body: JSON.stringify(payload),
-    }),
+      headers: {
+        "Idempotency-Key": idempotencyKey,
+      },
+    });
+  },
 
   confirmReservation: (id: string) =>
     request<ReservationResponse>(`/api/reservations/${id}/confirm`, {
