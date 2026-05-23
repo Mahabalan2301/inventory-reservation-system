@@ -7,7 +7,7 @@ export const productImages: Record<string,string> = {
   "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9",
 
   "Mac Book":
-  "https://images.unsplash.com/photo-1517336714739-489689fd1ca8",
+  "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=1200",
 
   "Sony Headphones":
   "https://images.unsplash.com/photo-1505740420928-5e560c06d30e",
