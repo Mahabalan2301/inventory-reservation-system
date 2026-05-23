@@ -4,75 +4,34 @@ import { jsonError } from "@/lib/api-errors";
 
 export async function GET() {
   try {
-
     const products = await prisma.product.findMany({
-
-      orderBy: {
-        name: "asc",
-      },
-
+      orderBy: { name: "asc" },
       include: {
-
-        inventory: {
-
-          include: {
-            warehouse: true,
-          },
-
+        stocks: {
+          include: { warehouse: true },
         },
-
       },
-
     });
 
     const payload = products.map((product) => ({
-
       id: product.id,
-
       name: product.name,
-
-      sku: product.sku,
-
-      price: product.price.toString(),
-
-      image: product.image,
-
-      warehouses: product.inventory.map((inv) => ({
-
-        warehouseId: inv.warehouseId,
-
-        warehouseName: inv.warehouse.name,
-
-        location: inv.warehouse.location,
-
-        totalStock: inv.totalStock,
-
-        // Compute dynamically
-        availableStock:
-          inv.totalStock -
-          inv.reservedStock,
-
-        reservedStock:
-          inv.reservedStock,
-
+      sku: `SKU-${product.id.slice(0, 8).toUpperCase()}`,
+      price: "0.00",
+      image: `https://api.dicebear.com/7.x/shapes/svg?seed=${encodeURIComponent(product.name)}`,
+      warehouses: product.stocks.map((stock) => ({
+        warehouseId: stock.warehouseId,
+        warehouseName: stock.warehouse.name,
+        location: stock.warehouse.city,
+        totalStock: stock.totalUnits,
+        availableStock: stock.totalUnits - stock.reservedUnits,
+        reservedStock: stock.reservedUnits,
       })),
-
     }));
 
-
-    return NextResponse.json({
-      products: payload,
-    });
-
+    return NextResponse.json({ products: payload });
   } catch (error) {
-
     console.error("[GET /api/products]", error);
-
-    return jsonError(
-      500,
-      "Failed to load products"
-    );
-
+    return jsonError(500, "Failed to load products");
   }
-
 }
