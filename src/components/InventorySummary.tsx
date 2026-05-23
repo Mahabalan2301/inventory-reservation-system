@@ -76,7 +76,7 @@ export function InventorySummary({
     visible: {
       opacity: 1,
       y: 0,
-      transition: { type: "spring", stiffness: 100, damping: 15 },
+      transition: { duration: 0.3, delay: 0.05 },
     },
   };
 
