@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
 import { createReservation } from "@/lib/reservations/service";
 import { createReservationSchema } from "@/lib/validations/reservation";
 import { jsonError } from "@/lib/api-errors";
@@ -11,6 +12,23 @@ import {
   getIdempotentResponse,
 } from "@/lib/idempotency/service";
 import { isRedisConfigured } from "@/lib/redis";
+
+export async function GET() {
+  try {
+    const reservations = await prisma.reservation.findMany({
+      include: {
+        product: true,
+        warehouse: true,
+      },
+      orderBy: { createdAt: "desc" },
+    });
+
+    return NextResponse.json({ reservations });
+  } catch (error) {
+    console.error("[GET /api/reservations]", error);
+    return jsonError(500, "Failed to fetch reservations");
+  }
+}
 
 export async function POST(request: Request) {
   try {

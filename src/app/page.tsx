@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { RefreshCw, Sparkles } from "lucide-react";
 import { Header } from "@/components/Header";
@@ -8,10 +9,67 @@ import { EmptyState } from "@/components/EmptyState";
 import { ErrorAlert } from "@/components/ErrorAlert";
 import { ProductsGridSkeleton } from "@/components/LoadingSkeleton";
 import { Badge } from "@/components/ui/badge";
+import { InventorySummary } from "@/components/InventorySummary";
+import { SearchFilters } from "@/components/SearchFilters";
 import { useProducts } from "@/hooks/useProducts";
+import { useReservations } from "@/hooks/useReservations";
 
 export default function HomePage() {
   const { products, error, isLoading, isValidating, mutate } = useProducts();
+  const { activeReservations } = useReservations();
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedWarehouse, setSelectedWarehouse] = useState<string | "all">(
+    "all"
+  );
+  const [stockFilter, setStockFilter] = useState("all");
+
+  // Extract unique warehouse names
+  const warehouses = useMemo(
+    () =>
+      Array.from(
+        new Set(products.flatMap((p) => p.warehouses.map((w) => w.warehouseName)))
+      ),
+    [products]
+  );
+
+  // Filter products
+  const filteredProducts = useMemo(() => {
+    return products.filter((product) => {
+      // Search filter
+      if (
+        searchQuery &&
+        !product.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
+        !product.sku.toLowerCase().includes(searchQuery.toLowerCase())
+      ) {
+        return false;
+      }
+
+      // Warehouse filter
+      if (selectedWarehouse !== "all") {
+        const hasWarehouse = product.warehouses.some(
+          (w) => w.warehouseName === selectedWarehouse
+        );
+        if (!hasWarehouse) return false;
+      }
+
+      // Stock filter
+      if (stockFilter !== "all") {
+        const hasStockMatch = product.warehouses.some((w) => {
+          if (stockFilter === "in-stock") {
+            return w.availableStock > 0;
+          }
+          if (stockFilter === "low-stock") {
+            return w.totalStock > 0 && w.availableStock / w.totalStock <= 0.25;
+          }
+          return true;
+        });
+        if (!hasStockMatch) return false;
+      }
+
+      return true;
+    });
+  }, [products, searchQuery, selectedWarehouse, stockFilter]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -36,6 +94,13 @@ export default function HomePage() {
           </p>
         </motion.section>
 
+        {!isLoading && !error && products.length > 0 && (
+          <InventorySummary
+            products={products}
+            activeReservations={activeReservations}
+          />
+        )}
+
         <div className="mb-6 flex items-center justify-between gap-4">
           <div>
             <h2 className="text-xl font-semibold">Product catalog</h2>
@@ -50,6 +115,18 @@ export default function HomePage() {
             </span>
           )}
         </div>
+
+        {!isLoading && !error && products.length > 0 && (
+          <SearchFilters
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            selectedWarehouse={selectedWarehouse}
+            onWarehouseChange={setSelectedWarehouse}
+            stockFilter={stockFilter}
+            onStockFilterChange={setStockFilter}
+            warehouses={warehouses}
+          />
+        )}
 
         {isLoading && <ProductsGridSkeleton />}
 
@@ -70,9 +147,16 @@ export default function HomePage() {
           />
         )}
 
-        {!isLoading && !error && products.length > 0 && (
+        {!isLoading && !error && products.length > 0 && filteredProducts.length === 0 && (
+          <EmptyState
+            title="No products match your filters"
+            description="Try adjusting your search or filters."
+          />
+        )}
+
+        {!isLoading && !error && filteredProducts.length > 0 && (
           <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-            {products.map((product, index) => (
+            {filteredProducts.map((product, index) => (
               <ProductCard
                 key={product.id}
                 product={product}

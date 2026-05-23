@@ -73,7 +73,7 @@ export function ProductCard({ product, index, onReserved }: ProductCardProps) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35, delay: index * 0.06 }}
     >
-      <Card className="overflow-hidden transition-shadow hover:shadow-lg">
+      <Card className="overflow-hidden transition-all duration-300 hover:shadow-xl hover:scale-[1.02]">
         <div className="relative h-44 w-full overflow-hidden bg-muted">
           <Image
             src={product.image}
@@ -160,16 +160,21 @@ export function ProductCard({ product, index, onReserved }: ProductCardProps) {
           </div>
 
           <Button
-            className="w-full"
+            className="w-full transition-all duration-300 hover:-translate-y-1"
             disabled={loading || maxQty === 0 || !selectedWarehouse}
             onClick={handleReserve}
           >
             {loading ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Reserving...
+              </>
             ) : (
-              <ShoppingCart className="h-4 w-4" />
+              <>
+                <ShoppingCart className="h-4 w-4" />
+                Reserve
+              </>
             )}
-            Reserve
           </Button>
         </CardContent>
       </Card>

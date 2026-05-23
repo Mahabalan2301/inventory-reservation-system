@@ -12,7 +12,9 @@ export function useProducts() {
     fetcher,
     {
       refreshInterval: 10_000,
+      dedupingInterval: 0,
       revalidateOnFocus: true,
+      revalidateIfStale: true,
     },
   );
 

@@ -50,6 +50,10 @@ export type ReservationResponse = {
   reservation: Reservation;
 };
 
+export type ReservationsResponse = {
+  reservations: Reservation[];
+};
+
 export type CreateReservationPayload = {
   productId: string;
   warehouseId: string;

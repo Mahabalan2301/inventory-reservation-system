@@ -3,6 +3,7 @@ import type {
   CreateReservationPayload,
   ProductsResponse,
   ReservationResponse,
+  ReservationsResponse,
 } from "@/types";
 
 const baseUrl =
@@ -37,6 +38,8 @@ async function request<T>(
 
 export const api = {
   getProducts: () => request<ProductsResponse>("/api/products"),
+
+  getReservations: () => request<ReservationsResponse>("/api/reservations"),
 
   getReservation: (id: string) =>
     request<ReservationResponse>(`/api/reservations/${id}`),
