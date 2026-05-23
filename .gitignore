@@ -33,6 +33,14 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
-next-env.d.ts
+
 
 /generated/prisma
+# prisma generated files
+prisma/migrations
+
+# logs
+*.log
+
+# OS files
+Thumbs.db
