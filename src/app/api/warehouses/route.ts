@@ -1,28 +1,87 @@
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+import { jsonError } from "@/lib/api-errors";
 
 export async function GET() {
+  try {
 
-    try {
+    const warehouses = await prisma.warehouse.findMany({
 
-        const warehouses = await prisma.warehouse.findMany();
+      orderBy: {
+        name: "asc",
+      },
 
-        return Response.json(warehouses);
+      select: {
 
-    } catch (error) {
+        id: true,
 
-        console.error(error);
+        name: true,
 
-        return Response.json(
-            {
-                message:"Failed to fetch warehouses"
-            },
-            {
-                status:500
-            }
-        );
+        location: true,
 
-    }
+        inventory: {
+
+          select: {
+            productId: true,
+            totalStock: true,
+            reservedStock: true,
+          }
+
+        }
+
+      }
+
+    });
+
+    const payload = warehouses.map((warehouse)=>({
+
+      id: warehouse.id,
+
+      name: warehouse.name,
+
+      location: warehouse.location,
+
+      inventoryCount:
+        warehouse.inventory.length,
+
+      inventory:
+        warehouse.inventory.map((item)=>({
+
+          productId: item.productId,
+
+          totalStock:
+            item.totalStock,
+
+          reservedStock:
+            item.reservedStock,
+
+          availableStock:
+            item.totalStock -
+            item.reservedStock
+
+        }))
+
+    }));
+
+
+    return NextResponse.json({
+      warehouses: payload
+    });
+
+  }
+
+  catch(error){
+
+    console.error(
+      "[GET /api/warehouses]",
+      error
+    );
+
+    return jsonError(
+      500,
+      "Failed to load warehouses"
+    );
+
+  }
 
 }

@@ -1,62 +1,76 @@
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+import { jsonError } from "@/lib/api-errors";
 
 export async function GET() {
-
   try {
 
     const products = await prisma.product.findMany({
 
+      orderBy: {
+        name: "asc",
+      },
+
       include: {
 
-        stocks: {
-          include: {
-            warehouse: true
-          }
-        }
+        inventory: {
 
-      }
+          include: {
+            warehouse: true,
+          },
+
+        },
+
+      },
 
     });
 
-    const formattedProducts = products.map((product)=>({
+    const payload = products.map((product) => ({
 
       id: product.id,
 
       name: product.name,
 
-      description: product.description,
+      sku: product.sku,
 
-      warehouses: product.stocks.map((stock)=>({
+      price: product.price.toString(),
 
-        warehouseId: stock.warehouse.id,
+      image: product.image,
 
-        warehouseName: stock.warehouse.name,
+      warehouses: product.inventory.map((inv) => ({
 
+        warehouseId: inv.warehouseId,
+
+        warehouseName: inv.warehouse.name,
+
+        location: inv.warehouse.location,
+
+        totalStock: inv.totalStock,
+
+        // Compute dynamically
         availableStock:
-          stock.totalUnits - stock.reservedUnits
+          inv.totalStock -
+          inv.reservedStock,
 
-      }))
+        reservedStock:
+          inv.reservedStock,
+
+      })),
 
     }));
 
 
-    return Response.json(formattedProducts);
+    return NextResponse.json({
+      products: payload,
+    });
 
-  }
+  } catch (error) {
 
-  catch(error){
+    console.error("[GET /api/products]", error);
 
-    console.error(error);
-
-    return Response.json(
-      {
-        message:"Failed to fetch products"
-      },
-      {
-        status:500
-      }
+    return jsonError(
+      500,
+      "Failed to load products"
     );
 
   }
