@@ -39,6 +39,7 @@ model Stock {
   warehouse Warehouse @relation(fields: [warehouseId], references: [id])
 
   @@unique([productId, warehouseId])
+  // DB: CHECK ("reservedUnits" >= 0) — see migration stock_reserved_units_non_negative
 }
 
 enum ReservationStatus {

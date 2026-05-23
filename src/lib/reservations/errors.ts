@@ -16,6 +16,12 @@ export class ReservationExpiredError extends Error {
   }
 }
 
+export class ReservationNotFoundError extends Error {
+  constructor() {
+    super("Reservation not found");
+  }
+}
+
 export class ReservationConflictError extends Error {
   constructor(message: string) {
     super(message);
