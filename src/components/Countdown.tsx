@@ -41,27 +41,37 @@ export function Countdown({ expiresAt, onExpire }: CountdownProps) {
   return (
     <div className="text-center">
       {expired ? (
-        <p className="text-lg font-semibold text-error">Reservation expired</p>
+        <p className="text-xl font-bold text-error">Reservation expired</p>
       ) : (
-        <motion.p
+        <motion.div
           className={cn(
-            "font-mono text-5xl font-bold tracking-tight sm:text-6xl",
-            urgent && "text-warning",
+            "rounded-3xl border-2 p-8 transition-all",
+            urgent
+              ? "border-warning/60 bg-warning/10"
+              : "border-primary/40 bg-primary/10",
           )}
-          animate={urgent ? { scale: [1, 1.03, 1] } : { scale: 1 }}
+          animate={urgent ? { scale: [1, 1.02, 1] } : { scale: 1 }}
           transition={
             urgent
               ? { duration: 1, repeat: Infinity, ease: "easeInOut" }
               : undefined
           }
         >
-          {formatTime(remaining)}
-        </motion.p>
-      )}
-      {!expired && (
-        <p className="mt-2 text-sm text-muted-foreground">
-          Complete your purchase before time runs out
-        </p>
+          <p
+            className={cn(
+              "font-mono text-6xl sm:text-7xl font-bold tracking-tight",
+              urgent ? "text-warning" : "text-primary",
+            )}
+          >
+            {formatTime(remaining)}
+          </p>
+          <p className={cn(
+            "mt-3 text-sm font-medium",
+            urgent ? "text-warning" : "text-secondary-text"
+          )}>
+            Complete your purchase before time runs out
+          </p>
+        </motion.div>
       )}
     </div>
   );

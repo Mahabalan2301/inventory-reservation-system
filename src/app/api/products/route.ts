@@ -2,6 +2,14 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { jsonError } from "@/lib/api-errors";
 
+const productPrices: Record<string, string> = {
+  "Nike Shoes": "8990",
+  "iPhone 16": "159900",
+  "Mac Book": "199900",
+  "Sony Headphones": "14990",
+  "Gaming Keyboard": "6990",
+};
+
 export async function GET() {
   try {
     const products = await prisma.product.findMany({
@@ -17,7 +25,7 @@ export async function GET() {
       id: product.id,
       name: product.name,
       sku: `SKU-${product.id.slice(0, 8).toUpperCase()}`,
-      price: "0.00",
+      price: productPrices[product.name] || "9999",
       image: `https://api.dicebear.com/7.x/shapes/svg?seed=${encodeURIComponent(product.name)}`,
       warehouses: product.stocks.map((stock) => ({
         warehouseId: stock.warehouseId,

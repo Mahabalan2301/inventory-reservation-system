@@ -2,21 +2,17 @@
 
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
-import { RefreshCw, Sparkles } from "lucide-react";
+import { RefreshCw } from "lucide-react";
 import { Header } from "@/components/Header";
 import { ProductCard } from "@/components/ProductCard";
 import { EmptyState } from "@/components/EmptyState";
 import { ErrorAlert } from "@/components/ErrorAlert";
 import { ProductsGridSkeleton } from "@/components/LoadingSkeleton";
-import { Badge } from "@/components/ui/badge";
-import { InventorySummary } from "@/components/InventorySummary";
 import { SearchFilters } from "@/components/SearchFilters";
 import { useProducts } from "@/hooks/useProducts";
-import { useReservations } from "@/hooks/useReservations";
 
-export default function HomePage() {
+export default function ProductsPage() {
   const { products, error, isLoading, isValidating, mutate } = useProducts();
-  const { activeReservations } = useReservations();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedWarehouse, setSelectedWarehouse] = useState<string | "all">(
@@ -76,50 +72,34 @@ export default function HomePage() {
       <Header />
 
       <main className="px-6 py-8 max-w-7xl">
-        {/* Hero Section */}
-        <motion.section
+        {/* Page Header */}
+        <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="mb-12 overflow-hidden rounded-[36px] border border-border gradient-hero p-12 md:p-16 relative"
+          className="mb-12"
         >
-          <div className="relative z-10">
-            <Badge className="mb-6 bg-primary/20 border border-primary/40 text-primary">
-              <Sparkles className="mr-2 h-4 w-4" />
-              Enterprise-grade inventory
-            </Badge>
-            <h1 className="max-w-3xl text-5xl md:text-6xl font-bold tracking-tight text-foreground mb-4">
-              Reserve inventory across warehouses
-            </h1>
-            <p className="max-w-2xl text-lg text-muted-foreground leading-relaxed">
-              Prevent overselling with real-time stock reservations. Protect your warehouse operations with concurrency protection across all locations.
-            </p>
-          </div>
-        </motion.section>
+          <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-3">
+            Products
+          </h1>
+          <p className="text-lg text-muted-foreground">
+            Manage and reserve inventory across all warehouses
+          </p>
+        </motion.div>
 
-        {/* Stats Section */}
-        {!isLoading && !error && products.length > 0 && (
-          <InventorySummary
-            products={products}
-            activeReservations={activeReservations}
-          />
-        )}
-
-        {/* Products Section Header */}
-        <div className="mb-8 mt-12">
+        {/* Filters Section */}
+        <div className="mb-8">
           <div className="flex items-center justify-between gap-4 mb-6">
             <div>
-              <h2 className="text-3xl font-bold text-foreground">Products</h2>
-              <p className="text-secondary-text mt-2">
-                Manage and reserve inventory across all warehouses
+              <p className="text-secondary-text">
+                {isValidating && !isLoading && (
+                  <span className="flex items-center gap-2 text-sm text-primary">
+                    <RefreshCw className="h-4 w-4 animate-spin" />
+                    Updating…
+                  </span>
+                )}
               </p>
             </div>
-            {isValidating && !isLoading && (
-              <span className="flex items-center gap-2 text-sm text-primary">
-                <RefreshCw className="h-4 w-4 animate-spin" />
-                Updating…
-              </span>
-            )}
           </div>
 
           {!isLoading && !error && products.length > 0 && (

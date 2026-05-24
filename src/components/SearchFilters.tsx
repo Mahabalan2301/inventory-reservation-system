@@ -1,6 +1,6 @@
 "use client";
 
-import { Search } from "lucide-react";
+import { Search, Filter } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
 type SearchFiltersProps = {
@@ -23,22 +23,23 @@ export function SearchFilters({
   warehouses,
 }: SearchFiltersProps) {
   return (
-    <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
-      <div className="relative flex-1 sm:max-w-md">
-        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+    <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+      <div className="relative flex-1 lg:max-w-xl">
+        <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
         <Input
-          placeholder="Search product..."
+          placeholder="Search products by name or SKU..."
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
-          className="pl-10"
+          className="pl-12 bg-secondary-bg/50 border-border hover:border-primary/30 focus:border-primary placeholder-secondary-text text-foreground rounded-2xl h-11"
         />
       </div>
 
-      <div className="flex gap-2 sm:gap-3">
+      <div className="flex gap-3 items-center">
+        <Filter className="h-5 w-5 text-secondary-text hidden lg:block" />
         <select
           value={selectedWarehouse}
           onChange={(e) => onWarehouseChange(e.target.value)}
-          className="rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+          className="rounded-2xl border border-border bg-secondary-bg/50 px-4 py-2.5 text-sm text-foreground ring-offset-background transition-all duration-200 hover:border-primary/30 hover:bg-secondary-bg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 disabled:cursor-not-allowed disabled:opacity-50 appearance-none cursor-pointer font-medium"
         >
           <option value="all">All Warehouses</option>
           {warehouses.map((warehouse) => (
@@ -51,7 +52,7 @@ export function SearchFilters({
         <select
           value={stockFilter}
           onChange={(e) => onStockFilterChange(e.target.value)}
-          className="rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+          className="rounded-2xl border border-border bg-secondary-bg/50 px-4 py-2.5 text-sm text-foreground ring-offset-background transition-all duration-200 hover:border-primary/30 hover:bg-secondary-bg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 disabled:cursor-not-allowed disabled:opacity-50 appearance-none cursor-pointer font-medium"
         >
           <option value="all">All Items</option>
           <option value="in-stock">In Stock</option>

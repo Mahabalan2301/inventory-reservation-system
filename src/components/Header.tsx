@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Moon, Sun, Package2 } from "lucide-react";
+import { Moon, Sun, Bell } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
@@ -14,27 +14,27 @@ export function Header() {
   useEffect(() => setMounted(true), []);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-xl">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
-        <Link href="/" className="group flex items-center gap-3">
-          <div className="gradient-brand flex h-10 w-10 items-center justify-center rounded-xl shadow-md transition-transform group-hover:scale-105">
-            <Package2 className="h-5 w-5 text-white" />
-          </div>
-          <div>
-            <p className="text-sm font-semibold tracking-tight sm:text-base">
-              Allo Inventory Reservation System
-            </p>
-            <p className="text-xs text-muted-foreground hidden sm:block">
-              Multi-warehouse retail & D2C
-            </p>
-          </div>
-        </Link>
+    <header className="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur-xl">
+      <div className="flex items-center justify-between gap-4 px-6 py-4">
+        <div>
+          <h2 className="text-xl font-bold text-foreground">Dashboard</h2>
+          <p className="text-sm text-secondary-text">Welcome back to Allo Inventory</p>
+        </div>
 
-        <div className="flex items-center gap-2">
-          <Badge variant="success" className="hidden sm:inline-flex">
-            <span className="mr-1.5 inline-block h-1.5 w-1.5 rounded-full bg-success animate-pulse" />
+        <div className="flex items-center gap-3">
+          <Badge className="bg-success/20 border border-success/40 text-success hidden sm:inline-flex">
+            <span className="mr-2 inline-block h-2 w-2 rounded-full bg-success animate-pulse" />
             Live Inventory
           </Badge>
+
+          <Button
+            variant="ghost"
+            size="icon"
+            className="relative"
+          >
+            <Bell className="h-5 w-5 text-muted-foreground hover:text-foreground" />
+            <span className="absolute top-1 right-1 w-2 h-2 bg-primary rounded-full" />
+          </Button>
 
           {mounted && (
             <Button
@@ -46,12 +46,22 @@ export function Header() {
               }
             >
               {theme === "dark" || resolvedTheme === "dark" ? (
-                <Sun className="h-4 w-4" />
+                <Sun className="h-5 w-5" />
               ) : (
-                <Moon className="h-4 w-4" />
+                <Moon className="h-5 w-5" />
               )}
             </Button>
           )}
+
+          <div className="flex items-center gap-3 pl-3 border-l border-border">
+            <div className="text-right">
+              <p className="text-sm font-medium text-foreground">Admin</p>
+              <p className="text-xs text-secondary-text">Manager</p>
+            </div>
+            <div className="w-10 h-10 rounded-full gradient-hero flex items-center justify-center font-bold text-black text-sm">
+              A
+            </div>
+          </div>
         </div>
       </div>
     </header>

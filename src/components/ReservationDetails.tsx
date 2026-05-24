@@ -17,32 +17,34 @@ const statusVariant: Record<
 
 export function ReservationDetails({ reservation }: ReservationDetailsProps) {
   return (
-    <Card>
+    <Card className="card-premium">
       <CardHeader>
-        <div className="flex items-center justify-between gap-2">
-          <CardTitle>Reservation details</CardTitle>
+        <div className="flex items-center justify-between gap-4">
+          <CardTitle>Reservation Details</CardTitle>
           <Badge variant={statusVariant[reservation.status]}>
             {reservation.status}
           </Badge>
         </div>
       </CardHeader>
-      <CardContent className="space-y-3 text-sm">
-        <div className="flex justify-between gap-4 border-b border-border pb-3">
-          <span className="text-muted-foreground">Product</span>
-          <span className="font-medium text-right">{reservation.product.name}</span>
+      <CardContent className="space-y-4">
+        <div className="flex justify-between gap-4 items-start pb-4 border-b border-border">
+          <span className="text-secondary-text font-medium">Product</span>
+          <span className="font-bold text-right text-foreground">{reservation.product.name}</span>
         </div>
-        <div className="flex justify-between gap-4 border-b border-border pb-3">
-          <span className="text-muted-foreground">Warehouse</span>
-          <span className="font-medium text-right">
-            {reservation.warehouse.name}
-            <span className="block text-xs text-muted-foreground">
+        <div className="flex justify-between gap-4 items-start pb-4 border-b border-border">
+          <span className="text-secondary-text font-medium">Warehouse</span>
+          <div className="text-right">
+            <p className="font-bold text-foreground">
+              {reservation.warehouse.name}
+            </p>
+            <p className="text-xs text-secondary-text mt-1">
               {reservation.warehouse.city}
-            </span>
-          </span>
+            </p>
+          </div>
         </div>
-        <div className="flex justify-between gap-4">
-          <span className="text-muted-foreground">Quantity</span>
-          <span className="font-medium">{reservation.quantity}</span>
+        <div className="flex justify-between gap-4 items-center">
+          <span className="text-secondary-text font-medium">Quantity</span>
+          <span className="font-bold text-xl text-primary">{reservation.quantity}</span>
         </div>
       </CardContent>
     </Card>

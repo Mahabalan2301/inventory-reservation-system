@@ -12,12 +12,12 @@ export function ErrorAlert({
   return (
     <div
       role="alert"
-      className="flex gap-3 rounded-2xl border border-error/30 bg-error/10 px-4 py-4 text-error"
+      className="flex gap-4 rounded-2xl border border-error/40 bg-error/15 px-6 py-5 text-error backdrop-filter backdrop-blur-sm"
     >
-      <AlertCircle className="mt-0.5 h-5 w-5 shrink-0" />
-      <div>
-        <p className="font-medium">{title}</p>
-        <p className="mt-1 text-sm opacity-90">{message}</p>
+      <AlertCircle className="mt-0.5 h-6 w-6 shrink-0" />
+      <div className="flex-1">
+        <p className="font-bold text-base">{title}</p>
+        <p className="mt-1 text-sm text-error/90 leading-relaxed">{message}</p>
       </div>
     </div>
   );
