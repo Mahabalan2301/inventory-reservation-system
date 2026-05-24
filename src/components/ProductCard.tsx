@@ -85,53 +85,46 @@ export function ProductCard({ product, index, onReserved }: ProductCardProps) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 16 }}
+      initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.35, delay: index * 0.06 }}
+      transition={{ duration: 0.3, delay: index * 0.04 }}
     >
-      <Card className="card-interactive overflow-hidden flex flex-col h-full">
-        {/* Product Image */}
-        <div className="relative h-40 md:h-56 w-full overflow-hidden bg-gradient-to-br from-primary-dark/30 via-primary/20 to-accent/10">
+      <Card className="card-interactive flex h-full flex-col overflow-hidden">
+        <div className="relative h-40 w-full overflow-hidden bg-secondary-bg md:h-48">
           <Image
-            src={
-              productImages[product.name]
-              ??
-              "/placeholder.jpg"
-            }
+            src={productImages[product.name] ?? "/placeholder.jpg"}
             alt={product.name}
             fill
-            className="object-cover transition-transform duration-500 hover:scale-110"
+            className="object-cover"
             unoptimized
           />
-          <div className="absolute inset-0 bg-gradient-card-highlight pointer-events-none" />
-          
-          {/* Stock Badge */}
-          <div className={`absolute top-4 left-4 badge-pill ${getStockBadgeColor()}`}>
+          <div className="absolute inset-0 bg-gradient-to-t from-[#3d2f5c]/20 to-transparent" />
+          <div
+            className={`absolute left-3 top-3 badge-pill ${getStockBadgeColor()}`}
+          >
             {getStockLabel()}
           </div>
         </div>
 
-        <CardContent className="flex flex-col flex-1 p-4 md:p-8">
-          {/* Product Info */}
-          <div className="mb-4 md:mb-6">
-            <h3 className="text-lg md:text-2xl font-bold text-foreground mb-2 line-clamp-2">
+        <CardContent className="flex flex-1 flex-col p-4 md:p-5">
+          <div className="mb-4">
+            <h3 className="mb-1 line-clamp-2 text-base font-semibold text-foreground md:text-lg">
               {product.name}
             </h3>
             <div className="flex items-center justify-between">
-              <span className="label-text text-xs md:text-sm text-secondary-text">{product.sku}</span>
-              <span className="text-lg md:text-2xl font-bold text-primary">
+              <span className="font-mono text-xs text-muted-foreground">
+                {product.sku}
+              </span>
+              <span className="text-base font-semibold text-foreground md:text-lg">
                 Rs. {product.price.toLocaleString()}
               </span>
             </div>
           </div>
 
-          {/* Warehouses Section */}
-          <div className="mb-4 md:mb-6 flex-1">
-            <p className="label-text text-xs md:text-sm text-secondary-text mb-2 md:mb-3">
-              Select Warehouse
-            </p>
+          <div className="mb-4 flex-1">
+            <p className="label-text mb-2">Warehouse</p>
             {product.warehouses.length === 0 ? (
-              <p className="text-xs md:text-sm text-secondary-text">No warehouse stock</p>
+              <p className="text-sm text-muted-foreground">No warehouse stock</p>
             ) : (
               <div className="space-y-2">
                 {product.warehouses.map((wh) => (
@@ -142,34 +135,31 @@ export function ProductCard({ product, index, onReserved }: ProductCardProps) {
                       setSelectedWarehouse(wh);
                       setQuantity(1);
                     }}
-                    className={`w-full transition-all duration-200 p-2 md:p-4 rounded-xl border text-left ${
+                    className={`w-full rounded-md border p-2 text-left transition-colors md:p-3 ${
                       selectedWarehouse?.warehouseId === wh.warehouseId
-                        ? "border-primary/60 bg-primary/10"
-                        : "border-border hover:border-primary/40 bg-secondary-bg/30 hover:bg-primary/5"
+                        ? "border-primary bg-primary/5"
+                        : "border-border bg-secondary-bg/30 hover:border-primary/40"
                     }`}
                   >
-                    <WarehouseStock stock={wh} />
+                    <WarehouseStock stock={wh} compact />
                   </button>
                 ))}
               </div>
             )}
           </div>
 
-          {/* Quantity Selector */}
-          <div className="mb-4 md:mb-6">
-            <p className="label-text text-xs md:text-sm text-secondary-text mb-2 md:mb-3">
-              Quantity
-            </p>
-            <div className="flex items-center gap-2 md:gap-3">
+          <div className="mb-4">
+            <p className="label-text mb-2">Quantity</p>
+            <div className="flex items-center gap-2">
               <Button
                 type="button"
                 variant="outline"
                 size="icon"
-                className="h-8 w-8 md:h-10 md:w-10"
+                className="h-9 w-9"
                 disabled={quantity <= 1 || loading}
                 onClick={() => setQuantity((q) => Math.max(1, q - 1))}
               >
-                <Minus className="h-3 w-3 md:h-4 md:w-4" />
+                <Minus className="h-4 w-4" />
               </Button>
               <Input
                 type="number"
@@ -183,37 +173,36 @@ export function ProductCard({ product, index, onReserved }: ProductCardProps) {
                     setQuantity(Math.min(Math.max(1, val), maxQty || 1));
                   }
                 }}
-                className="text-center flex-1"
+                className="text-center"
               />
               <Button
                 type="button"
                 variant="outline"
                 size="icon"
-                className="h-8 w-8 md:h-10 md:w-10"
+                className="h-9 w-9"
                 disabled={quantity >= maxQty || loading || maxQty === 0}
                 onClick={() => setQuantity((q) => Math.min(maxQty, q + 1))}
               >
-                <Plus className="h-3 w-3 md:h-4 md:w-4" />
+                <Plus className="h-4 w-4" />
               </Button>
             </div>
           </div>
 
-          {/* Reserve Button */}
           <Button
             size="lg"
-            className="w-full premium-shadow text-sm md:text-base h-9 md:h-11"
+            className="w-full"
             disabled={loading || maxQty === 0 || !selectedWarehouse}
             onClick={handleReserve}
           >
             {loading ? (
               <>
-                <Loader2 className="h-4 w-4 md:h-5 md:w-5 animate-spin" />
-                Reserving...
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Reserving…
               </>
             ) : (
               <>
-                <ShoppingCart className="h-4 w-4 md:h-5 md:w-5" />
-                Reserve Now
+                <ShoppingCart className="h-4 w-4" />
+                Reserve
               </>
             )}
           </Button>

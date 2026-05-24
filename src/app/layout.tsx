@@ -26,19 +26,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} min-h-full antialiased bg-background`}
+        className={`${geistSans.variable} ${geistMono.variable} min-h-full antialiased`}
       >
         <Providers>
-          <div className="flex">
-            <div className="hidden md:block">
-              <Sidebar />
-            </div>
-            <div className="flex-1 md:ml-[260px]">
-              {children}
-            </div>
-          </div>
+          <Sidebar />
+          <div className="main-panel flex-1 md:ml-[250px]">{children}</div>
         </Providers>
       </body>
     </html>

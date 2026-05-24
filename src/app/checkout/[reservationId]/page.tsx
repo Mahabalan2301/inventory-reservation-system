@@ -95,7 +95,7 @@ export default function CheckoutPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <Header />
 
       <main className="mx-auto max-w-lg px-4 py-8 sm:px-6">
@@ -139,9 +139,9 @@ export default function CheckoutPage() {
 
             {confirmed && (
               <motion.div
-                initial={{ scale: 0.95, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                className="flex items-center justify-center gap-2 rounded-2xl border border-success/30 bg-success/10 py-4 text-success"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="flex items-center justify-center gap-2 rounded-lg border border-success/30 bg-success/5 py-3 text-success"
               >
                 <CheckCircle2 className="h-5 w-5" />
                 <span className="font-medium">Purchase confirmed</span>

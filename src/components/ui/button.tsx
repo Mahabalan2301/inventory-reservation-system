@@ -4,27 +4,27 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full text-sm font-bold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
         default:
-          "gradient-button text-black shadow-lg hover:shadow-xl hover:scale-105",
+          "bg-primary text-primary-foreground hover:bg-primary-dark shadow-sm",
         secondary:
-          "bg-secondary-bg text-foreground hover:bg-secondary-bg/80 border border-border/50",
+          "bg-secondary-bg text-foreground border border-border hover:bg-muted",
         outline:
-          "border border-border bg-card/50 text-foreground hover:bg-secondary-bg",
-        ghost: "text-foreground hover:bg-secondary-bg/50",
+          "border border-border bg-transparent text-foreground hover:bg-secondary-bg",
+        ghost: "text-foreground hover:bg-secondary-bg",
         destructive:
-          "bg-error text-white hover:opacity-90 shadow-lg",
+          "bg-error text-white hover:opacity-90",
         success:
-          "bg-success text-black hover:opacity-90 shadow-lg",
+          "bg-success text-white hover:opacity-90",
       },
       size: {
-        default: "h-11 px-6 py-2.5",
-        sm: "h-9 rounded-lg px-4 text-xs",
-        lg: "h-12 rounded-full px-8 text-base font-bold",
-        icon: "h-11 w-11",
+        default: "h-10 px-4 py-2",
+        sm: "h-8 rounded-md px-3 text-xs",
+        lg: "h-11 rounded-md px-6 text-sm",
+        icon: "h-10 w-10",
       },
     },
     defaultVariants: {

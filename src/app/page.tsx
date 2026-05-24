@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
-import { RefreshCw, Sparkles } from "lucide-react";
+import { RefreshCw, Shield } from "lucide-react";
 import { Header } from "@/components/Header";
 import { ProductCard } from "@/components/ProductCard";
 import { EmptyState } from "@/components/EmptyState";
@@ -20,23 +20,22 @@ export default function HomePage() {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedWarehouse, setSelectedWarehouse] = useState<string | "all">(
-    "all"
+    "all",
   );
   const [stockFilter, setStockFilter] = useState("all");
 
-  // Extract unique warehouse names
   const warehouses = useMemo(
     () =>
       Array.from(
-        new Set(products.flatMap((p) => p.warehouses.map((w) => w.warehouseName)))
+        new Set(
+          products.flatMap((p) => p.warehouses.map((w) => w.warehouseName)),
+        ),
       ),
-    [products]
+    [products],
   );
 
-  // Filter products
   const filteredProducts = useMemo(() => {
     return products.filter((product) => {
-      // Search filter
       if (
         searchQuery &&
         !product.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
@@ -45,15 +44,13 @@ export default function HomePage() {
         return false;
       }
 
-      // Warehouse filter
       if (selectedWarehouse !== "all") {
         const hasWarehouse = product.warehouses.some(
-          (w) => w.warehouseName === selectedWarehouse
+          (w) => w.warehouseName === selectedWarehouse,
         );
         if (!hasWarehouse) return false;
       }
 
-      // Stock filter
       if (stockFilter !== "all") {
         const hasStockMatch = product.warehouses.some((w) => {
           if (stockFilter === "in-stock") {
@@ -72,32 +69,29 @@ export default function HomePage() {
   }, [products, searchQuery, selectedWarehouse, stockFilter]);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <Header />
 
-      <main className="px-4 md:px-6 py-6 md:py-8 max-w-7xl">
-        {/* Hero Section */}
+      <main className="max-w-7xl px-4 py-6 md:px-6 md:py-8">
         <motion.section
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="mb-8 md:mb-12 overflow-hidden rounded-[36px] border border-border gradient-hero p-6 md:p-12 lg:p-16 relative"
+          transition={{ duration: 0.35 }}
+          className="hero-banner mb-8 overflow-hidden rounded-lg p-6 md:mb-10 md:p-10"
         >
-          <div className="relative z-10">
-            <Badge className="mb-4 md:mb-6 bg-primary/20 border border-primary/40 text-primary">
-              <Sparkles className="mr-2 h-4 w-4" />
-              Enterprise-grade inventory
-            </Badge>
-            <h1 className="max-w-3xl text-3xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground mb-3 md:mb-4">
-              Reserve inventory across warehouses
-            </h1>
-            <p className="max-w-2xl text-base md:text-lg text-muted-foreground leading-relaxed">
-              Prevent overselling with real-time stock reservations. Protect your warehouse operations with concurrency protection across all locations.
-            </p>
-          </div>
+          <Badge variant="default" className="mb-4">
+            <Shield className="mr-1.5 h-3.5 w-3.5" />
+            Enterprise inventory
+          </Badge>
+          <h1 className="mb-3 max-w-2xl text-2xl font-semibold tracking-tight text-foreground md:text-4xl">
+            Reserve inventory across warehouses
+          </h1>
+          <p className="max-w-xl text-sm leading-relaxed text-muted-foreground md:text-base">
+            Real-time stock reservations with concurrency protection. Prevent
+            overselling across all warehouse locations.
+          </p>
         </motion.section>
 
-        {/* Stats Section */}
         {!isLoading && !error && products.length > 0 && (
           <InventorySummary
             products={products}
@@ -105,17 +99,18 @@ export default function HomePage() {
           />
         )}
 
-        {/* Products Section Header */}
-        <div className="mb-6 md:mb-8 mt-8 md:mt-12">
-          <div className="flex items-center justify-between gap-4 mb-6 flex-col md:flex-row">
+        <div className="mb-6 mt-8 md:mb-8 md:mt-10">
+          <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
-              <h2 className="text-2xl md:text-3xl font-bold text-foreground">Products</h2>
-              <p className="text-sm md:text-base text-secondary-text mt-1 md:mt-2">
+              <h2 className="text-xl font-semibold text-foreground md:text-2xl">
+                Products
+              </h2>
+              <p className="mt-1 text-sm text-muted-foreground">
                 Manage and reserve inventory across all warehouses
               </p>
             </div>
             {isValidating && !isLoading && (
-              <span className="flex items-center gap-2 text-sm text-primary">
+              <span className="flex items-center gap-2 text-sm text-muted-foreground">
                 <RefreshCw className="h-4 w-4 animate-spin" />
                 Updating…
               </span>
@@ -135,7 +130,6 @@ export default function HomePage() {
           )}
         </div>
 
-        {/* Content */}
         {isLoading && <ProductsGridSkeleton />}
 
         {error && !isLoading && (
@@ -155,15 +149,18 @@ export default function HomePage() {
           />
         )}
 
-        {!isLoading && !error && products.length > 0 && filteredProducts.length === 0 && (
-          <EmptyState
-            title="No products match your filters"
-            description="Try adjusting your search or filters."
-          />
-        )}
+        {!isLoading &&
+          !error &&
+          products.length > 0 &&
+          filteredProducts.length === 0 && (
+            <EmptyState
+              title="No products match your filters"
+              description="Try adjusting your search or filters."
+            />
+          )}
 
         {!isLoading && !error && filteredProducts.length > 0 && (
-          <div className="grid gap-4 md:gap-6 sm:grid-cols-2 lg:grid-cols-3 pb-16">
+          <div className="grid gap-4 pb-16 sm:grid-cols-2 lg:grid-cols-3 md:gap-5">
             {filteredProducts.map((product, index) => (
               <ProductCard
                 key={product.id}

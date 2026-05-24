@@ -8,15 +8,16 @@ import { cn } from "@/lib/utils";
 
 type WarehouseStockProps = {
   stock: WarehouseStockType;
+  compact?: boolean;
 };
 
 const levelStyles = {
-  available: "bg-gradient-to-r from-success to-accent",
-  low: "bg-gradient-to-r from-warning to-primary",
-  out: "bg-gradient-to-r from-error to-warning",
+  available: "bg-success",
+  low: "bg-warning",
+  out: "bg-muted-foreground/40",
 } as const;
 
-export function WarehouseStock({ stock }: WarehouseStockProps) {
+export function WarehouseStock({ stock, compact }: WarehouseStockProps) {
   const level = getStockLevel(stock.availableStock, stock.totalStock);
   const fill =
     stock.totalStock > 0
@@ -24,15 +25,24 @@ export function WarehouseStock({ stock }: WarehouseStockProps) {
       : 0;
 
   return (
-    <div className="rounded-2xl border border-border bg-gradient-to-br from-secondary-bg/40 to-transparent p-3 md:p-5 transition-all hover:bg-secondary-bg/60 hover:border-primary/30">
-      <div className="mb-3 md:mb-4 flex items-start justify-between gap-2 md:gap-3 flex-col md:flex-row">
-        <div className="flex items-center gap-2 md:gap-3 flex-1">
-          <div className="flex h-8 md:h-10 w-8 md:w-10 items-center justify-center rounded-2xl bg-primary/15 text-primary flex-shrink-0">
-            <Warehouse className="h-4 w-4 md:h-5 md:w-5" />
+    <div className={cn(!compact && "rounded-md border border-border bg-secondary-bg/30 p-3 md:p-4")}>
+      <div
+        className={cn(
+          "flex items-start justify-between gap-2",
+          compact ? "mb-2" : "mb-3 md:mb-4",
+        )}
+      >
+        <div className="flex flex-1 items-center gap-2">
+          <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-md bg-secondary-bg text-muted-foreground">
+            <Warehouse className="h-4 w-4" />
           </div>
-          <div className="flex-1">
-            <p className="text-xs md:text-sm font-bold text-foreground">{stock.warehouseName}</p>
-            <p className="text-xs text-secondary-text">{stock.location}</p>
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-sm font-medium text-foreground">
+              {stock.warehouseName}
+            </p>
+            <p className="truncate text-xs text-muted-foreground">
+              {stock.location}
+            </p>
           </div>
         </div>
         <Badge
@@ -43,28 +53,44 @@ export function WarehouseStock({ stock }: WarehouseStockProps) {
                 ? "warning"
                 : "error"
           }
-          className="text-xs md:text-sm"
+          className="flex-shrink-0 text-xs"
         >
           {level === "available"
             ? "In stock"
             : level === "low"
-              ? "Low stock"
-              : "Out of stock"}
+              ? "Low"
+              : "Out"}
         </Badge>
       </div>
 
-      <div className="mb-3 md:mb-4 h-2 md:h-2.5 overflow-hidden rounded-full bg-border/50">
+      <div
+        className={cn(
+          "overflow-hidden rounded-full bg-border",
+          compact ? "mb-2 h-1.5" : "mb-3 h-2",
+        )}
+      >
         <div
-          className={cn("h-full rounded-full transition-all duration-300 shadow-lg", levelStyles[level])}
+          className={cn(
+            "h-full rounded-full transition-all duration-300",
+            levelStyles[level],
+          )}
           style={{ width: `${fill}%` }}
         />
       </div>
 
-      <div className="flex flex-wrap gap-1.5 md:gap-2 text-xs">
-        <Badge variant="success" className="text-xs">Available: {stock.availableStock.toLocaleString()}</Badge>
-        <Badge variant="warning" className="text-xs">Reserved: {stock.reservedStock.toLocaleString()}</Badge>
-        <Badge variant="secondary" className="text-xs">Total: {stock.totalStock.toLocaleString()}</Badge>
-      </div>
+      {!compact && (
+        <div className="flex flex-wrap gap-1.5 text-xs">
+          <Badge variant="secondary" className="text-xs">
+            Available: {stock.availableStock.toLocaleString()}
+          </Badge>
+          <Badge variant="secondary" className="text-xs">
+            Reserved: {stock.reservedStock.toLocaleString()}
+          </Badge>
+          <Badge variant="outline" className="text-xs">
+            Total: {stock.totalStock.toLocaleString()}
+          </Badge>
+        </div>
+      )}
     </div>
   );
 }

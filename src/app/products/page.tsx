@@ -16,23 +16,22 @@ export default function ProductsPage() {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedWarehouse, setSelectedWarehouse] = useState<string | "all">(
-    "all"
+    "all",
   );
   const [stockFilter, setStockFilter] = useState("all");
 
-  // Extract unique warehouse names
   const warehouses = useMemo(
     () =>
       Array.from(
-        new Set(products.flatMap((p) => p.warehouses.map((w) => w.warehouseName)))
+        new Set(
+          products.flatMap((p) => p.warehouses.map((w) => w.warehouseName)),
+        ),
       ),
-    [products]
+    [products],
   );
 
-  // Filter products
   const filteredProducts = useMemo(() => {
     return products.filter((product) => {
-      // Search filter
       if (
         searchQuery &&
         !product.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
@@ -41,15 +40,13 @@ export default function ProductsPage() {
         return false;
       }
 
-      // Warehouse filter
       if (selectedWarehouse !== "all") {
         const hasWarehouse = product.warehouses.some(
-          (w) => w.warehouseName === selectedWarehouse
+          (w) => w.warehouseName === selectedWarehouse,
         );
         if (!hasWarehouse) return false;
       }
 
-      // Stock filter
       if (stockFilter !== "all") {
         const hasStockMatch = product.warehouses.some((w) => {
           if (stockFilter === "in-stock") {
@@ -68,39 +65,31 @@ export default function ProductsPage() {
   }, [products, searchQuery, selectedWarehouse, stockFilter]);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <Header />
 
-      <main className="px-4 md:px-6 py-6 md:py-8 max-w-7xl">
-        {/* Page Header */}
+      <main className="max-w-7xl px-4 py-6 md:px-6 md:py-8">
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="mb-8 md:mb-12"
+          transition={{ duration: 0.35 }}
+          className="mb-8 md:mb-10"
         >
-          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-foreground mb-2 md:mb-3">
+          <h1 className="mb-2 text-2xl font-semibold text-foreground md:text-3xl">
             Products
           </h1>
-          <p className="text-base md:text-lg text-muted-foreground">
+          <p className="text-sm text-muted-foreground md:text-base">
             Manage and reserve inventory across all warehouses
           </p>
         </motion.div>
 
-        {/* Filters Section */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between gap-4 mb-6">
-            <div>
-              <p className="text-secondary-text">
-                {isValidating && !isLoading && (
-                  <span className="flex items-center gap-2 text-sm text-primary">
-                    <RefreshCw className="h-4 w-4 animate-spin" />
-                    Updating…
-                  </span>
-                )}
-              </p>
-            </div>
-          </div>
+        <div className="mb-6">
+          {isValidating && !isLoading && (
+            <span className="mb-4 flex items-center gap-2 text-sm text-muted-foreground">
+              <RefreshCw className="h-4 w-4 animate-spin" />
+              Updating…
+            </span>
+          )}
 
           {!isLoading && !error && products.length > 0 && (
             <SearchFilters
@@ -115,7 +104,6 @@ export default function ProductsPage() {
           )}
         </div>
 
-        {/* Content */}
         {isLoading && <ProductsGridSkeleton />}
 
         {error && !isLoading && (
@@ -135,15 +123,18 @@ export default function ProductsPage() {
           />
         )}
 
-        {!isLoading && !error && products.length > 0 && filteredProducts.length === 0 && (
-          <EmptyState
-            title="No products match your filters"
-            description="Try adjusting your search or filters."
-          />
-        )}
+        {!isLoading &&
+          !error &&
+          products.length > 0 &&
+          filteredProducts.length === 0 && (
+            <EmptyState
+              title="No products match your filters"
+              description="Try adjusting your search or filters."
+            />
+          )}
 
         {!isLoading && !error && filteredProducts.length > 0 && (
-          <div className="grid gap-4 md:gap-6 sm:grid-cols-2 lg:grid-cols-3 pb-16">
+          <div className="grid gap-4 pb-16 sm:grid-cols-2 lg:grid-cols-3 md:gap-5">
             {filteredProducts.map((product, index) => (
               <ProductCard
                 key={product.id}

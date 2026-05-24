@@ -4,9 +4,9 @@ import { motion } from "framer-motion";
 import type { Variants } from "framer-motion";
 import {
   Package,
-  TrendingUp,
+  Warehouse,
+  Boxes,
   Clock,
-  ShoppingCart,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import type { Product } from "@/types";
@@ -20,9 +20,8 @@ export function InventorySummary({
   products,
   activeReservations,
 }: InventorySummaryProps) {
-  // Calculate metrics
   const totalProducts = products.length;
-  
+
   const { availableUnits, reservedUnits } = products.reduce(
     (acc, product) => {
       product.warehouses.forEach((warehouse) => {
@@ -31,7 +30,7 @@ export function InventorySummary({
       });
       return acc;
     },
-    { availableUnits: 0, reservedUnits: 0 }
+    { availableUnits: 0, reservedUnits: 0 },
   );
 
   const uniqueWarehouses = products.reduce((acc, product) => {
@@ -44,29 +43,21 @@ export function InventorySummary({
       label: "Total Products",
       value: totalProducts,
       icon: Package,
-      color: "text-primary",
-      bgColor: "bg-primary/20",
     },
     {
       label: "Warehouses",
       value: uniqueWarehouses.size,
-      icon: TrendingUp,
-      color: "text-accent",
-      bgColor: "bg-accent/20",
+      icon: Warehouse,
     },
     {
       label: "Total Stock",
       value: availableUnits + reservedUnits,
-      icon: ShoppingCart,
-      color: "text-warning",
-      bgColor: "bg-warning/20",
+      icon: Boxes,
     },
     {
-      label: "Reservations",
+      label: "Active Reservations",
       value: activeReservations,
       icon: Clock,
-      color: "text-success",
-      bgColor: "bg-success/20",
     },
   ];
 
@@ -75,18 +66,18 @@ export function InventorySummary({
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.08,
-        delayChildren: 0.2,
+        staggerChildren: 0.06,
+        delayChildren: 0.1,
       },
     },
   };
 
   const itemVariants: Variants = {
-    hidden: { opacity: 0, y: 12 },
+    hidden: { opacity: 0, y: 8 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.35 },
+      transition: { duration: 0.3 },
     },
   };
 
@@ -95,25 +86,23 @@ export function InventorySummary({
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="mb-12 grid gap-4 md:gap-6 sm:grid-cols-2 lg:grid-cols-4"
+      className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4 md:mb-10"
     >
       {metrics.map((metric, index) => {
         const Icon = metric.icon;
         return (
           <motion.div key={index} variants={itemVariants}>
-            <Card className="overflow-hidden border-border hover:border-primary/30 transition-all duration-300 hover:shadow-lg hover:-translate-y-1.5">
-              <CardContent className="p-4 md:p-8">
-                <div className="flex items-start justify-between gap-3 md:gap-4">
+            <Card className="border-border bg-secondary-bg transition-shadow hover:shadow-md">
+              <CardContent className="p-5 md:p-6">
+                <div className="flex items-start justify-between gap-4">
                   <div className="flex-1">
-                    <p className="label-text text-xs md:text-sm text-secondary-text mb-2 md:mb-3">
-                      {metric.label}
-                    </p>
-                    <p className="text-2xl md:text-4xl font-bold text-foreground">
+                    <p className="label-text mb-2">{metric.label}</p>
+                    <p className="text-2xl font-semibold tabular-nums text-foreground md:text-3xl">
                       {metric.value.toLocaleString()}
                     </p>
                   </div>
-                  <div className={`icon-circle ${metric.bgColor} flex-shrink-0`}>
-                    <Icon className={`h-4 w-4 md:h-6 md:w-6 ${metric.color}`} />
+                  <div className="icon-circle flex-shrink-0">
+                    <Icon className="h-4 w-4 text-primary md:h-5 md:w-5" />
                   </div>
                 </div>
               </CardContent>

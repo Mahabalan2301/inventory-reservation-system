@@ -26,7 +26,9 @@ export default function ReservationsPage() {
         const data = await response.json();
         setReservations(data.reservations || []);
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to load reservations");
+        setError(
+          err instanceof Error ? err.message : "Failed to load reservations",
+        );
       } finally {
         setLoading(false);
       }
@@ -36,70 +38,51 @@ export default function ReservationsPage() {
   }, []);
 
   const sortedReservations = [...reservations].sort(
-    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
   );
 
-  const getStatusColor = (status: string) => {
+  const getStatusVariant = (status: string) => {
     switch (status) {
       case "CONFIRMED":
-        return "success";
+        return "success" as const;
       case "PENDING":
-        return "warning";
-      case "RELEASED":
-        return "secondary";
+        return "warning" as const;
       default:
-        return "secondary";
-    }
-  };
-
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case "CONFIRMED":
-        return "✓";
-      case "PENDING":
-        return "⏱";
-      case "RELEASED":
-        return "↻";
-      default:
-        return "•";
+        return "secondary" as const;
     }
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <Header />
 
-      <main className="px-4 md:px-6 py-6 md:py-8 max-w-7xl">
-        {/* Page Header */}
+      <main className="max-w-7xl px-4 py-6 md:px-6 md:py-8">
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="mb-8 md:mb-12"
+          transition={{ duration: 0.35 }}
+          className="mb-8 md:mb-10"
         >
-          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-foreground mb-2 md:mb-3">
+          <h1 className="mb-2 text-2xl font-semibold text-foreground md:text-3xl">
             Reservations
           </h1>
-          <p className="text-base md:text-lg text-muted-foreground">
-            View all your inventory reservations
+          <p className="text-sm text-muted-foreground md:text-base">
+            View and track all inventory reservations
           </p>
         </motion.div>
 
-        {/* Content */}
         {loading && (
-          <div className="space-y-4">
+          <div className="space-y-3">
             {Array.from({ length: 3 }).map((_, i) => (
               <div
                 key={i}
-                className="h-32 bg-secondary-bg/50 border border-border animate-pulse"
+                className="h-28 animate-pulse rounded-lg border border-border bg-secondary-bg/50"
               />
             ))}
           </div>
         )}
 
-        {error && !loading && (
-          <ErrorAlert message={error} />
-        )}
+        {error && !loading && <ErrorAlert message={error} />}
 
         {!loading && !error && sortedReservations.length === 0 && (
           <EmptyState
@@ -110,91 +93,82 @@ export default function ReservationsPage() {
 
         {!loading && !error && sortedReservations.length > 0 && (
           <motion.div
-            className="space-y-4 pb-16"
+            className="space-y-3 pb-16"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.3, staggerChildren: 0.1 }}
+            transition={{ duration: 0.3 }}
           >
             {sortedReservations.map((reservation, index) => (
               <motion.div
                 key={reservation.id}
-                initial={{ opacity: 0, y: 12 }}
+                initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: index * 0.08 }}
+                transition={{ duration: 0.25, delay: index * 0.05 }}
               >
-                <Card className="overflow-hidden hover:border-primary/30 transition-all">
-                  <CardContent className="p-6">
-                    <div className="flex items-start justify-between gap-6">
-                      {/* Left Content */}
-                      <div className="flex-1 space-y-4">
-                        {/* Status & ID */}
-                        <div className="flex items-center justify-between gap-4">
-                          <div className="flex items-center gap-3">
-                            <Badge variant={getStatusColor(reservation.status)}>
-                              {getStatusIcon(reservation.status)} {reservation.status}
-                            </Badge>
-                            <span className="text-xs text-secondary-text font-mono">
-                              {reservation.id.slice(0, 8)}...
-                            </span>
-                          </div>
-                          <span className="text-sm text-secondary-text">
-                            {new Date(reservation.createdAt).toLocaleDateString()}
-                          </span>
+                <Card>
+                  <CardContent className="p-5 md:p-6">
+                    <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+                      <div className="flex items-center gap-3">
+                        <Badge variant={getStatusVariant(reservation.status)}>
+                          {reservation.status}
+                        </Badge>
+                        <span className="font-mono text-xs text-muted-foreground">
+                          {reservation.id.slice(0, 8)}…
+                        </span>
+                      </div>
+                      <span className="text-sm text-muted-foreground">
+                        {new Date(reservation.createdAt).toLocaleDateString()}
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                      <div className="flex items-start gap-3">
+                        <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-md bg-secondary-bg text-muted-foreground">
+                          <Package className="h-4 w-4" />
                         </div>
-
-                        {/* Product & Warehouse Info */}
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                          {/* Product */}
-                          <div className="flex items-start gap-3">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/15 text-primary flex-shrink-0 mt-0.5">
-                              <Package className="h-5 w-5" />
-                            </div>
-                            <div className="flex-1">
-                              <p className="label-text text-secondary-text">Product</p>
-                              <p className="text-sm font-bold text-foreground">
-                                {reservation.product.name}
-                              </p>
-                            </div>
-                          </div>
-
-                          {/* Warehouse */}
-                          <div className="flex items-start gap-3">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/15 text-accent flex-shrink-0 mt-0.5">
-                              <Warehouse className="h-5 w-5" />
-                            </div>
-                            <div className="flex-1">
-                              <p className="label-text text-secondary-text">Warehouse</p>
-                              <p className="text-sm font-bold text-foreground">
-                                {reservation.warehouse.name}
-                              </p>
-                              <p className="text-xs text-secondary-text">
-                                {reservation.warehouse.city}
-                              </p>
-                            </div>
-                          </div>
-
-                          {/* Quantity */}
-                          <div className="flex items-start gap-3">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-warning/15 text-warning flex-shrink-0 mt-0.5">
-                              <Hash className="h-5 w-5" />
-                            </div>
-                            <div className="flex-1">
-                              <p className="label-text text-secondary-text">Quantity</p>
-                              <p className="text-sm font-bold text-foreground">
-                                {reservation.quantity} unit{reservation.quantity !== 1 ? "s" : ""}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Expiry Info */}
-                        <div className="flex items-center gap-2 pt-2">
-                          <Clock className="h-4 w-4 text-secondary-text" />
-                          <span className="text-xs text-secondary-text">
-                            Expires: {new Date(reservation.expiresAt).toLocaleString()}
-                          </span>
+                        <div>
+                          <p className="label-text">Product</p>
+                          <p className="text-sm font-medium text-foreground">
+                            {reservation.product.name}
+                          </p>
                         </div>
                       </div>
+
+                      <div className="flex items-start gap-3">
+                        <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-md bg-secondary-bg text-muted-foreground">
+                          <Warehouse className="h-4 w-4" />
+                        </div>
+                        <div>
+                          <p className="label-text">Warehouse</p>
+                          <p className="text-sm font-medium text-foreground">
+                            {reservation.warehouse.name}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {reservation.warehouse.city}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start gap-3">
+                        <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-md bg-secondary-bg text-muted-foreground">
+                          <Hash className="h-4 w-4" />
+                        </div>
+                        <div>
+                          <p className="label-text">Quantity</p>
+                          <p className="text-sm font-medium text-foreground">
+                            {reservation.quantity} unit
+                            {reservation.quantity !== 1 ? "s" : ""}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mt-4 flex items-center gap-2 border-t border-border pt-4">
+                      <Clock className="h-4 w-4 text-muted-foreground" />
+                      <span className="text-xs text-muted-foreground">
+                        Expires:{" "}
+                        {new Date(reservation.expiresAt).toLocaleString()}
+                      </span>
                     </div>
                   </CardContent>
                 </Card>

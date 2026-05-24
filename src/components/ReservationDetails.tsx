@@ -17,34 +17,38 @@ const statusVariant: Record<
 
 export function ReservationDetails({ reservation }: ReservationDetailsProps) {
   return (
-    <Card className="card-premium">
+    <Card>
       <CardHeader>
-        <div className="flex items-center justify-between gap-2 md:gap-4 flex-col md:flex-row">
-          <CardTitle className="text-lg md:text-xl">Reservation Details</CardTitle>
-          <Badge variant={statusVariant[reservation.status]} className="text-xs md:text-sm">
+        <div className="flex flex-col items-start justify-between gap-2 sm:flex-row sm:items-center">
+          <CardTitle>Reservation Details</CardTitle>
+          <Badge variant={statusVariant[reservation.status]}>
             {reservation.status}
           </Badge>
         </div>
       </CardHeader>
-      <CardContent className="space-y-3 md:space-y-4 text-sm md:text-base">
-        <div className="flex justify-between gap-2 md:gap-4 items-start pb-3 md:pb-4 border-b border-border flex-col md:flex-row">
-          <span className="text-secondary-text font-medium">Product</span>
-          <span className="font-bold text-right text-foreground">{reservation.product.name}</span>
+      <CardContent className="space-y-0 text-sm">
+        <div className="flex flex-col justify-between gap-1 border-b border-border py-3 sm:flex-row sm:items-center">
+          <span className="text-muted-foreground">Product</span>
+          <span className="font-medium text-foreground">
+            {reservation.product.name}
+          </span>
         </div>
-        <div className="flex justify-between gap-2 md:gap-4 items-start pb-3 md:pb-4 border-b border-border flex-col md:flex-row">
-          <span className="text-secondary-text font-medium">Warehouse</span>
-          <div className="text-right md:text-left">
-            <p className="font-bold text-foreground">
+        <div className="flex flex-col justify-between gap-1 border-b border-border py-3 sm:flex-row sm:items-center">
+          <span className="text-muted-foreground">Warehouse</span>
+          <div className="sm:text-right">
+            <p className="font-medium text-foreground">
               {reservation.warehouse.name}
             </p>
-            <p className="text-xs text-secondary-text mt-1">
+            <p className="text-xs text-muted-foreground">
               {reservation.warehouse.city}
             </p>
           </div>
         </div>
-        <div className="flex justify-between gap-2 md:gap-4 items-center flex-col md:flex-row">
-          <span className="text-secondary-text font-medium">Quantity</span>
-          <span className="font-bold text-lg md:text-xl text-primary">{reservation.quantity}</span>
+        <div className="flex flex-col justify-between gap-1 py-3 sm:flex-row sm:items-center">
+          <span className="text-muted-foreground">Quantity</span>
+          <span className="text-lg font-semibold tabular-nums text-foreground">
+            {reservation.quantity}
+          </span>
         </div>
       </CardContent>
     </Card>
