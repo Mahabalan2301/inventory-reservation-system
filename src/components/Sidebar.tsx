@@ -2,15 +2,7 @@
 
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
-import {
-  LayoutDashboard,
-  Package,
-  ShoppingCart,
-  Warehouse,
-  BarChart3,
-  Settings,
-  X,
-} from "lucide-react";
+import { LayoutDashboard, Package, ShoppingCart, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useSidebar } from "@/components/SidebarProvider";
 
@@ -18,9 +10,6 @@ const menuItems = [
   { label: "Dashboard", href: "/", icon: LayoutDashboard },
   { label: "Products", href: "/products", icon: Package },
   { label: "Reservations", href: "/reservations", icon: ShoppingCart },
-  { label: "Warehouses", href: null, icon: Warehouse },
-  { label: "Analytics", href: null, icon: BarChart3 },
-  { label: "Settings", href: null, icon: Settings },
 ] as const;
 
 function SidebarLogo({ onNavigate }: { onNavigate?: () => void }) {
@@ -45,8 +34,7 @@ function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
   const router = useRouter();
 
-  const handleNavigation = (href: string | null) => {
-    if (!href) return;
+  const handleNavigation = (href: string) => {
     router.push(href);
     onNavigate?.();
     if (href === "/") {
@@ -56,8 +44,7 @@ function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
     }
   };
 
-  const isActive = (href: string | null) => {
-    if (!href) return false;
+  const isActive = (href: string) => {
     if (href === "/") return pathname === "/";
     return pathname.startsWith(href);
   };
@@ -67,23 +54,17 @@ function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
       {menuItems.map((item) => {
         const Icon = item.icon;
         const active = isActive(item.href);
-        const disabled = !item.href;
 
         return (
           <button
             key={item.label}
             type="button"
-            disabled={disabled}
             onClick={() => handleNavigation(item.href)}
             className={cn(
               "flex w-full items-center gap-3 rounded-[14px] px-3.5 py-2.5 text-left text-[14px] transition-colors duration-200",
-              active &&
-                "bg-primary-soft font-semibold text-primary",
-              !active &&
-                !disabled &&
-                "font-medium text-muted-foreground hover:bg-secondary-bg hover:text-foreground",
-              disabled &&
-                "cursor-default text-muted-text opacity-60",
+              active
+                ? "bg-primary-soft font-semibold text-primary"
+                : "font-medium text-muted-foreground hover:bg-secondary-bg hover:text-foreground",
             )}
           >
             <Icon className="h-[18px] w-[18px] flex-shrink-0" />
