@@ -41,11 +41,11 @@ export function Countdown({ expiresAt, onExpire }: CountdownProps) {
   return (
     <div className="text-center">
       {expired ? (
-        <p className="text-xl font-bold text-error">Reservation expired</p>
+        <p className="text-lg md:text-xl font-bold text-error">Reservation expired</p>
       ) : (
         <motion.div
           className={cn(
-            "rounded-3xl border-2 p-8 transition-all",
+            "rounded-3xl border-2 p-4 md:p-8 transition-all",
             urgent
               ? "border-warning/60 bg-warning/10"
               : "border-primary/40 bg-primary/10",
@@ -59,14 +59,14 @@ export function Countdown({ expiresAt, onExpire }: CountdownProps) {
         >
           <p
             className={cn(
-              "font-mono text-6xl sm:text-7xl font-bold tracking-tight",
+              "font-mono text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight",
               urgent ? "text-warning" : "text-primary",
             )}
           >
             {formatTime(remaining)}
           </p>
           <p className={cn(
-            "mt-3 text-sm font-medium",
+            "mt-2 md:mt-3 text-xs md:text-sm font-medium",
             urgent ? "text-warning" : "text-secondary-text"
           )}>
             Complete your purchase before time runs out

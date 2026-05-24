@@ -38,7 +38,7 @@ export function Sidebar() {
   };
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-[260px] bg-sidebar-bg border-r border-border flex flex-col">
+    <aside className="fixed left-0 top-0 h-screen w-[260px] bg-sidebar-bg border-r border-border flex flex-col hidden md:flex">
       {/* Logo */}
       <div className="p-6 border-b border-border">
         <Link href="/" className="flex items-center gap-3 group">

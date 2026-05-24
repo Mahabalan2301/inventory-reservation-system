@@ -75,23 +75,23 @@ export default function HomePage() {
     <div className="min-h-screen bg-background">
       <Header />
 
-      <main className="px-6 py-8 max-w-7xl">
+      <main className="px-4 md:px-6 py-6 md:py-8 max-w-7xl">
         {/* Hero Section */}
         <motion.section
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="mb-12 overflow-hidden rounded-[36px] border border-border gradient-hero p-12 md:p-16 relative"
+          className="mb-8 md:mb-12 overflow-hidden rounded-[36px] border border-border gradient-hero p-6 md:p-12 lg:p-16 relative"
         >
           <div className="relative z-10">
-            <Badge className="mb-6 bg-primary/20 border border-primary/40 text-primary">
+            <Badge className="mb-4 md:mb-6 bg-primary/20 border border-primary/40 text-primary">
               <Sparkles className="mr-2 h-4 w-4" />
               Enterprise-grade inventory
             </Badge>
-            <h1 className="max-w-3xl text-5xl md:text-6xl font-bold tracking-tight text-foreground mb-4">
+            <h1 className="max-w-3xl text-3xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground mb-3 md:mb-4">
               Reserve inventory across warehouses
             </h1>
-            <p className="max-w-2xl text-lg text-muted-foreground leading-relaxed">
+            <p className="max-w-2xl text-base md:text-lg text-muted-foreground leading-relaxed">
               Prevent overselling with real-time stock reservations. Protect your warehouse operations with concurrency protection across all locations.
             </p>
           </div>
@@ -106,11 +106,11 @@ export default function HomePage() {
         )}
 
         {/* Products Section Header */}
-        <div className="mb-8 mt-12">
-          <div className="flex items-center justify-between gap-4 mb-6">
+        <div className="mb-6 md:mb-8 mt-8 md:mt-12">
+          <div className="flex items-center justify-between gap-4 mb-6 flex-col md:flex-row">
             <div>
-              <h2 className="text-3xl font-bold text-foreground">Products</h2>
-              <p className="text-secondary-text mt-2">
+              <h2 className="text-2xl md:text-3xl font-bold text-foreground">Products</h2>
+              <p className="text-sm md:text-base text-secondary-text mt-1 md:mt-2">
                 Manage and reserve inventory across all warehouses
               </p>
             </div>
@@ -163,7 +163,7 @@ export default function HomePage() {
         )}
 
         {!isLoading && !error && filteredProducts.length > 0 && (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 pb-16">
+          <div className="grid gap-4 md:gap-6 sm:grid-cols-2 lg:grid-cols-3 pb-16">
             {filteredProducts.map((product, index) => (
               <ProductCard
                 key={product.id}

@@ -95,25 +95,25 @@ export function InventorySummary({
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="mb-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
+      className="mb-12 grid gap-4 md:gap-6 sm:grid-cols-2 lg:grid-cols-4"
     >
       {metrics.map((metric, index) => {
         const Icon = metric.icon;
         return (
           <motion.div key={index} variants={itemVariants}>
             <Card className="overflow-hidden border-border hover:border-primary/30 transition-all duration-300 hover:shadow-lg hover:-translate-y-1.5">
-              <CardContent className="p-8">
-                <div className="flex items-start justify-between gap-4">
+              <CardContent className="p-4 md:p-8">
+                <div className="flex items-start justify-between gap-3 md:gap-4">
                   <div className="flex-1">
-                    <p className="label-text text-secondary-text mb-3">
+                    <p className="label-text text-xs md:text-sm text-secondary-text mb-2 md:mb-3">
                       {metric.label}
                     </p>
-                    <p className="text-4xl font-bold text-foreground">
+                    <p className="text-2xl md:text-4xl font-bold text-foreground">
                       {metric.value.toLocaleString()}
                     </p>
                   </div>
                   <div className={`icon-circle ${metric.bgColor} flex-shrink-0`}>
-                    <Icon className={`h-6 w-6 ${metric.color}`} />
+                    <Icon className={`h-4 w-4 md:h-6 md:w-6 ${metric.color}`} />
                   </div>
                 </div>
               </CardContent>

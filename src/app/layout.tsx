@@ -32,8 +32,10 @@ export default function RootLayout({
       >
         <Providers>
           <div className="flex">
-            <Sidebar />
-            <div className="flex-1 ml-[260px]">
+            <div className="hidden md:block">
+              <Sidebar />
+            </div>
+            <div className="flex-1 md:ml-[260px]">
               {children}
             </div>
           </div>

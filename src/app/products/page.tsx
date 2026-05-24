@@ -71,18 +71,18 @@ export default function ProductsPage() {
     <div className="min-h-screen bg-background">
       <Header />
 
-      <main className="px-6 py-8 max-w-7xl">
+      <main className="px-4 md:px-6 py-6 md:py-8 max-w-7xl">
         {/* Page Header */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="mb-12"
+          className="mb-8 md:mb-12"
         >
-          <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-3">
+          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-foreground mb-2 md:mb-3">
             Products
           </h1>
-          <p className="text-lg text-muted-foreground">
+          <p className="text-base md:text-lg text-muted-foreground">
             Manage and reserve inventory across all warehouses
           </p>
         </motion.div>
@@ -143,7 +143,7 @@ export default function ProductsPage() {
         )}
 
         {!isLoading && !error && filteredProducts.length > 0 && (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 pb-16">
+          <div className="grid gap-4 md:gap-6 sm:grid-cols-2 lg:grid-cols-3 pb-16">
             {filteredProducts.map((product, index) => (
               <ProductCard
                 key={product.id}
